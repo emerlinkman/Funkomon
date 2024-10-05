@@ -1,0 +1,56 @@
+
+CREATE DATABASE pokedex_kanto;
+USE pokedex_kanto;
+
+CREATE TABLE pokedex (
+    no_pokedex INT PRIMARY KEY,
+    nombre VARCHAR(50),
+    tipo VARCHAR(50),
+    descripcion TEXT
+);
+
+INSERT INTO pokedex (no_pokedex, nombre, tipo, descripcion) VALUES
+(001, 'Bulbasaur', 'Planta/Veneno', 'Un Pokémon que puede almacenar nutrientes en su bulbo.'),
+(002, 'Ivysaur', 'Planta/Veneno', 'Su bulbo ha crecido y está a punto de florecer.'),
+(003, 'Venusaur', 'Planta/Veneno', 'Su flor libera un aroma que puede causar somnolencia.'),
+(004, 'Charmander', 'Fuego', 'Su cola arde en llamas; se enfada si la llama se apaga.'),
+(005, 'Charmeleon', 'Fuego', 'Su cola arde más intensamente cuando está enojado.'),
+(006, 'Charizard', 'Fuego/Volador', 'Puede volar y expulsa fuego por su boca.'),
+(007, 'Squirtle', 'Agua', 'Un Pokémon que lanza chorros de agua a alta presión.'),
+(008, 'Wartortle', 'Agua', 'Sus orejas se han hecho más largas y puntiagudas.'),
+(009, 'Blastoise', 'Agua', 'Tiene cañones de agua en los hombros que usa para atacar.'),
+(010, 'Caterpie', 'Bicho', 'Su cuerpo es muy frágil; se protege enrollándose en una bola.'),
+(011, 'Metapod', 'Bicho', 'Está en la fase de pupa; su caparazón es duro.');
+
+INSERT INTO pokedex (no_pokedex, nombre, tipo, descripcion) VALUES
+(012, "Butterfree", "Bicho/Volador", "Sus alas tienen polvillo que puede inducir sueño."),
+(013, "Weedle", "Bicho/Veneno",	"Su aguijón puede causar dolor intenso."),
+(014, "Kakuna",	"Bicho/Veneno",	"Está en la fase de pupa y no puede moverse."),
+(015, "Beedrill", "Bicho/Veneno", "Tiene dos aguijones en las patas y uno en el abdomen."),
+(016, "Pidgey", "Normal/Volador", "Vive en bosques y campos; se siente más seguro en grupo."),
+(017, 'Pidgeotto', 'Normal/Volador', 'Su agilidad en vuelo es muy alta.'),
+(018, 'Pidgeot', 'Normal/Volador', 'Sus alas son tan fuertes que pueden causar tormentas.'),
+(019, 'Rattata', 'Normal', 'Su mordida es muy rápida y puede causar heridas profundas.'),
+(020, 'Raticate', 'Normal', 'Su dentadura crece continuamente y debe ser desgastada.'),
+(021, 'Spearow', 'Normal/Volador', 'Es muy agresivo y no duda en atacar si se siente amenazado.'),
+(022, 'Fearow', 'Normal/Volador', 'Puede volar a gran velocidad y cazar con precisión.'),
+(023, 'Ekans', 'Veneno', 'Su cuerpo se retuerce para atacar a sus presas.'),
+(024, 'Arbok', 'Veneno', 'Su capucha puede expandirse para intimidar a sus enemigos.'),
+(025, 'Pikachu', 'Eléctrico', 'Emite electricidad a través de sus mejillas.'),
+(026, 'Raichu', 'Eléctrico', 'Puede liberar descargas eléctricas más poderosas.'),
+(027, 'Sandshrew', 'Tierra', 'Se esconde en su caparazón para protegerse de ataques.'),
+(028, 'Sandslash', 'Tierra', 'Usa sus garras para cavar y atacar a sus enemigos.'),
+(029, 'Nidoran♀', 'Veneno', 'Tiene un aguijón venenoso en la parte trasera.'),
+(030, 'Nidorina', 'Veneno', 'Sus colmillos y aguijón son más grandes y peligrosos.'),
+(031, 'Nidoqueen', 'Veneno/Tierra', 'Su cuerpo está blindado con una dura coraza.'),
+(032, 'Nidoran♂', 'Veneno', 'Tiene colmillos que pueden causar graves daños.'),
+(033, 'Nidorino', 'Veneno', 'Se vuelve más agresivo cuando se siente amenazado.'),
+(034, 'Nidoking', 'Veneno/Tierra', 'Su gran fuerza lo convierte en un temido adversario.'),
+(035, 'Clefairy', 'Hada', 'Usa sus orejas para detectar y comunicarse con sus compañeros.'),
+(036, 'Clefable', 'Hada', 'Puede volar y tiene una gran resistencia.'),
+(037, 'Vulpix', 'Fuego', 'Sus seis colas pueden liberar llamas intensas.'),
+(038, 'Ninetales', 'Fuego', 'Cada cola tiene una habilidad especial.'),
+(039, 'Jigglypuff', 'Normal/Hada', 'Su canto puede dormir a cualquiera que lo escuche.'),
+(040, 'Wigglytuff', 'Normal/Hada', 'Tiene una capacidad de canto aún más potente.'),
+(041, 'Zubat', 'Veneno/Volador', 'Vive en cuevas y usa el eco para navegar.'),
+(042, 'Golbat', 'Veneno/Volador', 'Tiene una boca grande que le permite morder con fuerza.'),
