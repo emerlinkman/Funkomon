@@ -1,6 +1,6 @@
 package com.mycompany.funkomon;
 
-public class Gengar extends Pokemon implements IFantasma{
+public class Gengar extends Pokemon implements IFantasma {
 
     public Gengar() {
         super(94, "Gengar", "Fantasma/Veneno", "Cueva", "Kanto", 150, 100);
@@ -11,44 +11,46 @@ public class Gengar extends Pokemon implements IFantasma{
     }
 
     @Override
-    protected void atacarPlacaje(Pokemon objetivo) {
-        int danio = 10;
-        System.out.println(getNombre() + " ha atacado con Placaje");
-        atacar(objetivo, danio);
-    }
-
-    @Override
-    protected void atacarMordisco(Pokemon objetivo) {
-        int danio = 15;
-        System.out.println(getNombre() + " ha atacado con Mordisco");
-        atacar(objetivo, danio);
-    }
-
-    @Override
-    protected void atacarGruñido(Pokemon objetivo) {
-        int danio = 0;
-        System.out.println(getNombre() + " ha atacado con Gruñido");
-        atacar(objetivo, danio);
+    public void atacarPlacaje(Pokemon objetivo) {
+        int danio = 25; // Daño de Placaje
+        objetivo.recibirDanio(danio);
+        System.out.println(getNombre() + " usó Placaje causando " + danio + " de daño a " + objetivo.getNombre());
     }
 
     @Override
     public void atacarBolaSombra(Pokemon objetivo) {
-        int danio = 50;
-        System.out.println(getNombre() + " ha atacado con Bola Sombra");
-        atacar(objetivo, danio);
+        int danio = 45; // Daño de Bola Sombra
+        objetivo.recibirDanio(danio);
+        System.out.println(getNombre() + " usó Bola Sombra causando " + danio + " de daño a " + objetivo.getNombre());
     }
 
     @Override
     public void atacarPuñoSombra(Pokemon objetivo) {
-        int danio = 75;
-        System.out.println(getNombre() + " ha atacado con Puño Sombra");
-        atacar(objetivo, danio);
+        int danio = 60; // Daño de Puño Sombra
+        objetivo.recibirDanio(danio);
+        System.out.println(getNombre() + " usó Puño Sombra causando " + danio + " de daño a " + objetivo.getNombre());
     }
 
     @Override
     public void atacarTinieblas(Pokemon objetivo) {
-        int danio = 35;
-        System.out.println(getNombre() + " ha atacado con Tinieblas");
-        atacar(objetivo, danio);
+        int danio = 35; // Daño de Tinieblas
+        objetivo.recibirDanio(danio);
+        System.out.println(getNombre() + " usó Tinieblas causando " + danio + " de daño a " + objetivo.getNombre());
+    }
+
+    @Override
+    public String[] getAtaques() {
+        return new String[]{"Placaje", "Bola Sombra", "Puño Sombra", "Tinieblas"};
+    }
+
+    @Override
+    protected int usarAtaqueEspecifico(int indiceAtaque, Pokemon oponente) {
+        switch (indiceAtaque) {
+            case 1: atacarBolaSombra(oponente); break;
+            case 2: atacarPuñoSombra(oponente); break;
+            case 3: atacarTinieblas(oponente); break;
+            default: throw new IllegalArgumentException("Ataque no válido");
+        }
+        return oponente.getVida();
     }
 }
