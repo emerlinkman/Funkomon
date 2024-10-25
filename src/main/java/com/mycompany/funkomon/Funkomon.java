@@ -2,8 +2,6 @@ package com.mycompany.funkomon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Funkomon extends JFrame {
 
@@ -33,7 +31,9 @@ public class Funkomon extends JFrame {
 
         // Añadir acciones a los botones
         btnEntrenador.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Aquí va la información del Entrenador.");
+            // Crear y mostrar la ventana del Entrenador
+            Entrenador ventanaEntrenador = new Entrenador();
+            ventanaEntrenador.setVisible(true);
         });
 
         btnPokedex.addActionListener(e -> {
