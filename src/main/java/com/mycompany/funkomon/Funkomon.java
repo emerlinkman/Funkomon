@@ -2,6 +2,10 @@ package com.mycompany.funkomon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class Funkomon extends JFrame {
 
@@ -31,23 +35,20 @@ public class Funkomon extends JFrame {
 
         // Añadir acciones a los botones
         btnEntrenador.addActionListener(e -> {
-            // Crear y mostrar la ventana del Entrenador
             Entrenador ventanaEntrenador = new Entrenador();
             ventanaEntrenador.setVisible(true);
         });
 
-        btnPokedex.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Aquí se muestra la Pokedex.");
-        });
+        btnPokedex.addActionListener(e -> mostrarPokedex());
 
         btnBatalla.addActionListener(e -> {
             Pokemon jugador = seleccionarPokemon();
-            Pokemon oponente = seleccionarPokemon();  // Puedes cambiar la lógica de selección del oponente
+            Pokemon oponente = seleccionarPokemon();
             new BatallaGUI(jugador, oponente).setVisible(true);
         });
 
         btnSalir.addActionListener(e -> {
-            System.exit(0);  // Cierra la aplicación
+            System.exit(0);
         });
 
         // Añadir los botones al panel de fondo
@@ -58,6 +59,40 @@ public class Funkomon extends JFrame {
 
         // Añadir el panel de fondo con los botones al frame principal
         add(panelFondo, BorderLayout.CENTER);
+    }
+
+    // Método para mostrar la información de la Pokedex
+    private void mostrarPokedex() {
+        Conexion conexion = new Conexion();
+        try (Connection connection = conexion.getConexion()) {
+            if (connection == null) {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String sql = "SELECT nombre, tipo, descripcion FROM pokedex";
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+
+                ArrayList<String> pokedexList = new ArrayList<>();
+
+                while (rs.next()) {
+                    String nombre = rs.getString("nombre");
+                    String tipo = rs.getString("tipo");
+                    String descripcion = rs.getString("descripcion");
+                    pokedexList.add("Nombre: " + nombre + ", Tipo: " + tipo + ", Descripción: " + descripcion);
+                }
+
+                if (pokedexList.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "La Pokedex está vacía.");
+                } else {
+                    JOptionPane.showMessageDialog(this, String.join("\n\n", pokedexList), "Pokedex", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Método para seleccionar un Pokémon
@@ -72,7 +107,6 @@ public class Funkomon extends JFrame {
                 opciones,
                 "Charmander");
 
-        // Retornar el Pokémon seleccionado
         if (seleccion != null) {
             switch (seleccion) {
                 case "Charmander":
@@ -85,11 +119,10 @@ public class Funkomon extends JFrame {
                     return new Venusaur();
             }
         }
-        return new Charmander();  // Retornar Charmander por defecto si no se selecciona nada
+        return new Charmander();
     }
 
     public static void main(String[] args) {
-        // Ejecuta el menú principal
         SwingUtilities.invokeLater(() -> {
             new Funkomon().setVisible(true);
         });
@@ -102,7 +135,7 @@ class MenuConImagenFondo extends JPanel {
 
     public MenuConImagenFondo() {
         // Cargar la imagen de fondo
-        fondo = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\pokemon.jpg").getImage(); // Cambia esta ruta por la ubicación de tu imagen
+        fondo = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\pokemon.jpg").getImage();
     }
 
     @Override
