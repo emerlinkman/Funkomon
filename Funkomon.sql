@@ -1,2 +1,1 @@
-SELECT * FROM funkomon.equipo_pokemon;
-equipo_pokemon
+SELECT * FROM funkomon.pokedex;
