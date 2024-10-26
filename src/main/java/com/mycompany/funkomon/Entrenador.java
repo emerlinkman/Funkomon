@@ -2,12 +2,14 @@ package com.mycompany.funkomon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Entrenador extends JFrame {
     public Entrenador() {
         // Configuración de la ventana Entrenador
         setTitle("Entrenador");
-        setSize(350, 300);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // Centra la ventana
 
@@ -48,7 +50,7 @@ public class Entrenador extends JFrame {
         // Crear panel para los botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         JButton btnMochila = new JButton("Mochila");
-        JButton btnPokedex = new JButton("Pokedex");
+        JButton btnPokedex = new JButton("Equipo pokemon");
 
         // Añadir botones al panel de botones
         panelBotones.add(btnMochila);
@@ -61,5 +63,15 @@ public class Entrenador extends JFrame {
         // Añadir el panel principal a la ventana
         add(panelPrincipal);
         pack(); // Ajusta la ventana al contenido
+
+        // Acción al presionar el botón "Mochila"
+        btnMochila.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Mochila mochila = new Mochila(); // Crea la instancia de Mochila
+                mochila.mostrarItems(); // Muestra los ítems
+                mochila.cerrarConexion(); // Cierra la conexión cuando termina
+            }
+        });
     }
 }
