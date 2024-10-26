@@ -66,6 +66,7 @@ public class BatallaGUI extends JFrame {
         btnAtacar1.addActionListener(e -> realizarAtaque(entrenador, 1));
         btnAtacar2.addActionListener(e -> realizarAtaque(entrenador, 2));
         btnAtacar3.addActionListener(e -> realizarAtaque(entrenador, 3));
+        
         btnAtacar4.addActionListener(e -> realizarAtaque(entrenador, 4));
 
         // Configura los listeners para los botones de salir y reiniciar
