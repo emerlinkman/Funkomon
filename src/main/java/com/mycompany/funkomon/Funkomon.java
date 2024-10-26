@@ -1,11 +1,6 @@
-package com.mycompany.funkomon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
-import java.util.ArrayList;
 
 public class Funkomon extends JFrame {
 
@@ -16,9 +11,9 @@ public class Funkomon extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Panel para el fondo con imagen
+        // Crear y configurar el panel de fondo
         MenuConImagenFondo panelFondo = new MenuConImagenFondo();
-        panelFondo.setLayout(new GridLayout(5, 1, 10, 10));
+        panelFondo.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panelFondo.setOpaque(false);
 
         // Crear el título
@@ -28,28 +23,10 @@ public class Funkomon extends JFrame {
         panelFondo.add(titulo);
 
         // Crear los botones personalizados
-        BotonPersonalizado btnEntrenador = new BotonPersonalizado("Entrenador");
-        BotonPersonalizado btnPokedex = new BotonPersonalizado("Pokedex");
-        BotonPersonalizado btnBatalla = new BotonPersonalizado("Batalla Pokémon");
-        BotonPersonalizado btnSalir = new BotonPersonalizado("Salir");
-
-        // Añadir acciones a los botones
-        btnEntrenador.addActionListener(e -> {
-            Entrenador ventanaEntrenador = new Entrenador();
-            ventanaEntrenador.setVisible(true);
-        });
-
-        btnPokedex.addActionListener(e -> mostrarPokedex());
-
-        btnBatalla.addActionListener(e -> {
-            Pokemon jugador = seleccionarPokemon();
-            Pokemon oponente = seleccionarPokemon();
-            new BatallaGUI(jugador, oponente).setVisible(true);
-        });
-
-        btnSalir.addActionListener(e -> {
-            System.exit(0);
-        });
+        BotonPersonalizado btnEntrenador = crearBoton("Entrenador", e -> mostrarVentanaEntrenador());
+        BotonPersonalizado btnPokedex = crearBoton("Pokedex", e -> mostrarPokedex());
+        BotonPersonalizado btnBatalla = crearBoton("Batalla Pokémon", e -> iniciarBatalla());
+        BotonPersonalizado btnSalir = crearBoton("Salir", e -> System.exit(0));
 
         // Añadir los botones al panel de fondo
         panelFondo.add(btnEntrenador);
@@ -61,38 +38,57 @@ public class Funkomon extends JFrame {
         add(panelFondo, BorderLayout.CENTER);
     }
 
-    // Método para mostrar la información de la Pokedex
+    // Método para crear un botón personalizado con acción
+    private BotonPersonalizado crearBoton(String texto, java.awt.event.ActionListener accion) {
+        BotonPersonalizado boton = new BotonPersonalizado(texto);
+        boton.addActionListener(accion);
+        return boton;
+    }
+
+    // Método para mostrar la ventana del Entrenador
+    private void mostrarVentanaEntrenador() {
+        Entrenador ventanaEntrenador = new Entrenador();
+        ventanaEntrenador.setVisible(true);
+    }
+
+    // Método para mostrar la Pokedex
     private void mostrarPokedex() {
-        Conexion conexion = new Conexion();
-        try (Connection connection = conexion.getConexion()) {
-            if (connection == null) {
-                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+    String pokedexInfo = Pokedex.obtenerPokedex();
 
-            String sql = "SELECT nombre, tipo, descripcion FROM pokedex";
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
+    // Crear un JTextArea para mostrar la información
+    JTextArea textArea = new JTextArea();
+    textArea.setEditable(false);
+    textArea.setText(pokedexInfo);
+    textArea.setLineWrap(true);
+    textArea.setWrapStyleWord(true);
 
-                ArrayList<String> pokedexList = new ArrayList<>();
+    // Crear un JScrollPane para permitir el desplazamiento
+    JScrollPane scrollPane = new JScrollPane(textArea);
+    scrollPane.setPreferredSize(new Dimension(600, 400)); // Tamaño preferido del JScrollPane
 
-                while (rs.next()) {
-                    String nombre = rs.getString("nombre");
-                    String tipo = rs.getString("tipo");
-                    String descripcion = rs.getString("descripcion");
-                    pokedexList.add("Nombre: " + nombre + ", Tipo: " + tipo + ", Descripción: " + descripcion);
-                }
+    // Mostrar la Pokedex en un JFrame
+    JFrame ventanaPokedex = new JFrame("Pokedex");
+    ventanaPokedex.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    ventanaPokedex.add(scrollPane);
+    ventanaPokedex.pack();
+    ventanaPokedex.setLocationRelativeTo(null); // Centrar la ventana
+    ventanaPokedex.setVisible(true);
+}
 
-                if (pokedexList.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "La Pokedex está vacía.");
-                } else {
-                    JOptionPane.showMessageDialog(this, String.join("\n\n", pokedexList), "Pokedex", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+
+    // Método para iniciar la batalla Pokémon
+    private void iniciarBatalla() {
+        Pokemon jugador = seleccionarPokemon();
+        Pokemon oponente = seleccionarPokemon();
+        
+        // Verifica que el oponente no sea el mismo que el jugador
+        while (jugador.getClass() == oponente.getClass()) {
+            oponente = seleccionarPokemon();
         }
+        
+        BatallaGUI batallaGUI = new BatallaGUI(jugador, oponente);
+        batallaGUI.setVisible(true);
+        this.setVisible(false); // Ocultar el menú principal
     }
 
     // Método para seleccionar un Pokémon
@@ -101,12 +97,13 @@ public class Funkomon extends JFrame {
         String seleccion = (String) JOptionPane.showInputDialog(
                 null,
                 "Selecciona tu Pokémon:",
-                "Seleccionar Pokémon",
+                "Seleccionar Pokemon para la batalla",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 opciones,
                 "Charmander");
 
+        // Retornar el Pokémon seleccionado
         if (seleccion != null) {
             switch (seleccion) {
                 case "Charmander":
@@ -123,18 +120,19 @@ public class Funkomon extends JFrame {
     }
 
     public static void main(String[] args) {
+        // Ejecuta el menú principal
         SwingUtilities.invokeLater(() -> {
             new Funkomon().setVisible(true);
         });
     }
 }
 
-// Clase para el fondo con imagen
+
 class MenuConImagenFondo extends JPanel {
-    private Image fondo;
+    private final Image fondo;
 
     public MenuConImagenFondo() {
-        // Cargar la imagen de fondo
+        
         fondo = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\pokemon.jpg").getImage();
     }
 
@@ -146,9 +144,8 @@ class MenuConImagenFondo extends JPanel {
     }
 }
 
-// Clase para botones personalizados
-class BotonPersonalizado extends JButton {
 
+class BotonPersonalizado extends JButton {
     public BotonPersonalizado(String texto) {
         super(texto);
         setFont(new Font("Arial", Font.BOLD, 20));

@@ -1,5 +1,12 @@
-package com.mycompany.funkomon;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 
+/**
+ *
+ * @author kev98
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +23,7 @@ class MenuConImagenFondo2 extends JPanel {
 
     public MenuConImagenFondo2() {
         // Cargar la imagen de fondo
-        fondo = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\pokemon.jpg").getImage();
+        fondo = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\pokemon.jpg").getImage(); // Cambia esta ruta por la ubicación de tu imagen
     }
 
     @Override
@@ -36,7 +43,7 @@ public class Entrenador extends JFrame {
         setLocationRelativeTo(null); // Centra la ventana
 
         // Crear el panel con imagen de fondo
-        MenuConImagenFondo panelFondo = new MenuConImagenFondo();
+        MenuConImagenFondo2 panelFondo = new MenuConImagenFondo2();
         panelFondo.setLayout(new BorderLayout());
 
         // Crear panel principal
@@ -57,21 +64,13 @@ public class Entrenador extends JFrame {
 
         // Crear las etiquetas con la información
         JLabel nombre = new JLabel("Nombre: Ash Ketchum");
-        nombre.setForeground(Color.BLACK);
         JLabel edad = new JLabel("Edad: 12 años");
-        edad.setForeground(Color.BLACK);
         JLabel sexo = new JLabel("Sexo: Masculino");
-        sexo.setForeground(Color.BLACK);
         JLabel region = new JLabel("Región: Pueblo Paleta, Kanto");
-        region.setForeground(Color.BLACK);
         JLabel pokedolar = new JLabel("Pokedolar: 1000");
-        pokedolar.setForeground(Color.BLACK);
         JLabel medallas = new JLabel("Medallas Ganadas: 8");
-        medallas.setForeground(Color.BLACK);
         JLabel pokemonVistos = new JLabel("Pokemon Vistos: 151");
-        pokemonVistos.setForeground(Color.BLACK);
         JLabel pokemonAtrapados = new JLabel("Pokemon Atrapados: 120");
-        pokemonAtrapados.setForeground(Color.BLACK);
 
         // Añadir las etiquetas al panel de información
         panelInfo.add(titulo);
@@ -88,11 +87,11 @@ public class Entrenador extends JFrame {
         // Crear panel para los botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         JButton btnMochila = new JButton("Mochila");
-        JButton btnEquipo_Pokemon = new JButton("Equipo Pokémon");
+        JButton btnEquipoPokemon = new JButton("Equipo Pokémon");
 
         // Añadir botones al panel de botones
         panelBotones.add(btnMochila);
-        panelBotones.add(btnEquipo_Pokemon);
+        panelBotones.add(btnEquipoPokemon);
 
         // Añadir los paneles al panel principal
         panelPrincipal.add(panelInfo, BorderLayout.CENTER);
@@ -107,21 +106,84 @@ public class Entrenador extends JFrame {
 
         // Acción al presionar el botón "Mochila"
         btnMochila.addActionListener((ActionEvent e) -> {
-            Mochila mochila = new Mochila(); // Crea la instancia de Mochila
-            mochila.mostrarItems(); // Muestra los ítems
-            mochila.cerrarConexion(); // Cierra la conexión cuando termina
+            mostrarMochila();
         });
 
-        // Acción al presionar el botón "Equipo Pokemon"
-        btnEquipo_Pokemon.addActionListener((ActionEvent e) -> {
-            List<String> equipoPokemon = obtenerEquipoPokemon(); // Método que obtiene el equipo
-            if (equipoPokemon.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "El equipo Pokémon está vacío.");
-            } else {
-                String mensaje = "Equipo Pokémon:\n" + String.join("\n", equipoPokemon);
-                JOptionPane.showMessageDialog(null, mensaje);
-            }
+        // Acción al presionar el botón "Equipo Pokémon"
+        btnEquipoPokemon.addActionListener((ActionEvent e) -> {
+            mostrarEquipoPokemon();
         });
+    }
+
+    // Método para mostrar la mochila en un nuevo JFrame
+   private void mostrarMochila() {
+    JFrame ventanaMochila = new JFrame("Mochila");
+    ventanaMochila.setSize(400, 300);
+    ventanaMochila.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    ventanaMochila.setLocationRelativeTo(null); // Centra la ventana
+
+    JTextArea textAreaMochila = new JTextArea();
+    textAreaMochila.setEditable(false);
+    JScrollPane scrollPane = new JScrollPane(textAreaMochila);
+    ventanaMochila.add(scrollPane, BorderLayout.CENTER);
+
+    // Obtener los ítems de la mochila desde la base de datos
+    List<String> items = Mochila.obtenerItemsMochila();
+    StringBuilder contenido = new StringBuilder();
+
+    if (items != null) {
+        for (String item : items) {
+            contenido.append(item).append("\n");
+        }
+    } else {
+        contenido.append("Error al obtener los ítems de la mochila.");
+    }
+    
+    textAreaMochila.setText(contenido.toString());
+    ventanaMochila.setVisible(true);
+}
+
+
+    // Método para mostrar el equipo Pokémon en un nuevo JFrame
+    private void mostrarEquipoPokemon() {
+        JFrame ventanaEquipo = new JFrame("Equipo Pokémon");
+        ventanaEquipo.setSize(400, 300);
+        ventanaEquipo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventanaEquipo.setLocationRelativeTo(null); // Centra la ventana
+
+        JTextArea textAreaEquipo = new JTextArea();
+        textAreaEquipo.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(textAreaEquipo);
+        ventanaEquipo.add(scrollPane, BorderLayout.CENTER);
+
+        // Obtener el equipo Pokémon desde la base de datos
+        List<String> equipoPokemon = obtenerEquipoPokemon();
+        StringBuilder contenido = new StringBuilder();
+        for (String pokemon : equipoPokemon) {
+            contenido.append(pokemon).append("\n");
+        }
+        textAreaEquipo.setText(contenido.toString());
+
+        ventanaEquipo.setVisible(true);
+    }
+
+    // Método para obtener los ítems de la mochila desde la base de datos
+    private List<String> obtenerItemsMochila() {
+        List<String> items = new ArrayList<>();
+        String sql = "SELECT item_name FROM mochila"; // Consulta para obtener los ítems de la mochila
+
+        try (Connection connection = ConexionBD.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                items.add(rs.getString("item_name")); // Suponiendo que la columna se llama "item_name"
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos.");
+        }
+
+        return items; // Devuelve la lista de ítems
     }
 
     // Método para obtener el equipo Pokémon desde la base de datos
@@ -129,7 +191,7 @@ public class Entrenador extends JFrame {
         List<String> equipo = new ArrayList<>(); // Inicializa la lista para evitar NullPointerException
         String sql = "SELECT Nombre, Tipo, Ataque1, Ataque2, Ataque3, Ataque4, Nivel FROM equipo_pokemon"; // Consulta para obtener los detalles del equipo Pokémon
 
-        try (Connection connection = Conexion.getConnection();
+        try (Connection connection = ConexionBD.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -145,7 +207,7 @@ public class Entrenador extends JFrame {
 
                 // Formatear la información del Pokémon
                 String detallesPokemon = String.format(
-                    "<html>Nombre: %s<br>Tipo: %s<br>Ataques: %s, %s, %s, %s<br>Nivel: %d</html>",
+                    "Nombre: %s\nTipo: %s\nAtaques: %s, %s, %s, %s\nNivel: %d\n",
                     nombrePokemon, tipo, ataque1, ataque2, ataque3, ataque4, nivel
                 );
 

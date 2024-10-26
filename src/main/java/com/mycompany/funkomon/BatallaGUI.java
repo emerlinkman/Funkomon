@@ -1,5 +1,12 @@
-package com.mycompany.funkomon;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 
+/**
+ *
+ * @author kev98
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
@@ -66,7 +73,6 @@ public class BatallaGUI extends JFrame {
         btnAtacar1.addActionListener(e -> realizarAtaque(entrenador, 1));
         btnAtacar2.addActionListener(e -> realizarAtaque(entrenador, 2));
         btnAtacar3.addActionListener(e -> realizarAtaque(entrenador, 3));
-        
         btnAtacar4.addActionListener(e -> realizarAtaque(entrenador, 4));
 
         // Configura los listeners para los botones de salir y reiniciar
