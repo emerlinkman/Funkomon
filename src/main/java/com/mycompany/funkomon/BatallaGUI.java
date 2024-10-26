@@ -2,17 +2,21 @@ package com.mycompany.funkomon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class BatallaGUI extends JFrame {
 
     private Pokemon entrenador;
-    private Pokemon oponente;
-    private JTextArea textArea;
-    private JButton btnAtacar1, btnAtacar2, btnAtacar3, btnAtacar4;
-    private Random random = new Random();
+    private final Pokemon oponente;
+    private final JTextArea textArea;
+    private final JButton btnAtacar1;
+    private final JButton btnAtacar2;
+    private final JButton btnAtacar3;
+    private final JButton btnAtacar4;
+    private final JButton btnSalir;
+    private final JButton btnReiniciar;
+    private final JButton btnAtacarOponente; // Botón para que el oponente ataque
+    private final Random random = new Random();
 
     public BatallaGUI(Pokemon usuarioPokemon, Pokemon oponente) {
         this.entrenador = usuarioPokemon;
@@ -24,7 +28,7 @@ public class BatallaGUI extends JFrame {
         setLayout(new BorderLayout());
 
         // Agregar el GIF en el centro
-        ImageIcon gifIcon = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\batalla pokemon.gif"); // Cambia la ruta a tu archivo GIF
+        ImageIcon gifIcon = new ImageIcon("C:\\Users\\kev98\\OneDrive\\Imágenes\\batalla pokemon.gif");
         JLabel gifLabel = new JLabel(gifIcon);
         add(gifLabel, BorderLayout.CENTER);
 
@@ -35,10 +39,10 @@ public class BatallaGUI extends JFrame {
 
         // Crear el panel de botones
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2));
+        panel.setLayout(new GridLayout(3, 2));
         add(panel, BorderLayout.SOUTH);
 
-        // Inicializar botones
+        // Inicializar botones de ataque
         btnAtacar1 = new JButton("Ataque 1");
         btnAtacar2 = new JButton("Ataque 2");
         btnAtacar3 = new JButton("Ataque 3");
@@ -49,11 +53,27 @@ public class BatallaGUI extends JFrame {
         panel.add(btnAtacar3);
         panel.add(btnAtacar4);
 
-        // Configura los listeners para los botones
+        // Botones de salir y reiniciar
+        btnSalir = new JButton("Salir");
+        btnReiniciar = new JButton("Volver a pelear");
+        btnAtacarOponente = new JButton("Ataque del Oponente"); // Nuevo botón para el ataque del oponente
+        btnAtacarOponente.setEnabled(false); // Deshabilitar inicialmente
+        panel.add(btnReiniciar);
+        panel.add(btnSalir);
+        panel.add(btnAtacarOponente); // Añadir botón al panel
+
+        // Configura los listeners para los botones de ataque
         btnAtacar1.addActionListener(e -> realizarAtaque(entrenador, 1));
         btnAtacar2.addActionListener(e -> realizarAtaque(entrenador, 2));
         btnAtacar3.addActionListener(e -> realizarAtaque(entrenador, 3));
         btnAtacar4.addActionListener(e -> realizarAtaque(entrenador, 4));
+
+        // Configura los listeners para los botones de salir y reiniciar
+        btnSalir.addActionListener(e -> System.exit(0));
+        btnReiniciar.addActionListener(e -> reiniciarBatalla());
+
+        // Configura el listener para el ataque del oponente
+        btnAtacarOponente.addActionListener(e -> realizarAtaqueOponente());
 
         // Actualiza los nombres de los botones según el Pokémon
         actualizarBotonesAtaque(usuarioPokemon);
@@ -79,39 +99,36 @@ public class BatallaGUI extends JFrame {
             return;
         }
 
-        // Ataque del oponente
-        realizarAtaqueOponente();
-        actualizarEstado();
+        // Habilitar el botón de ataque del oponente
+        btnAtacarOponente.setEnabled(true);
     }
 
     private int calcularDanio(Pokemon atacante, int ataqueSeleccionado) {
         switch (ataqueSeleccionado) {
-            case 1: return 15; // Ajusta el daño según el ataque
+            case 1: return 15;
             case 2: return 35;
-            case 3: return 0;  // Gruñido puede no causar daño
+            case 3: return 0;  
             case 4: return 25;
             default: return 0;
         }
     }
 
     private String obtenerNombreAtaque(Pokemon atacante, int ataqueSeleccionado) {
-        switch (ataqueSeleccionado) {
-            case 1:
-                return atacante instanceof Charmander ? "Mordisco" : "Placaje";
-            case 2:
-                return atacante instanceof Charmander ? "Lanzallamas" : "Pistola de Agua";
-            case 3:
-                return "Gruñido";
-            case 4:
-                return atacante instanceof Charmander ? "Puño Fuego" : "Surf";
-            default:
-                return "Ataque no válido";
-        }
+        return switch (ataqueSeleccionado) {
+            case 1 -> atacante instanceof Charmander ? "Mordisco" : "Placaje";
+            case 2 -> atacante instanceof Charmander ? "Lanzallamas" : "Pistola de Agua";
+            case 3 -> "Gruñido";
+            case 4 -> atacante instanceof Charmander ? "Puño Fuego" : "Surf";
+            default -> "Ataque no válido";
+        };
     }
 
     private void realizarAtaqueOponente() {
-        int ataqueSeleccionadoOponente = random.nextInt(3) + 1;  // Selecciona un ataque aleatorio del oponente
+        int ataqueSeleccionadoOponente = random.nextInt(4) + 1;  // Selecciona un ataque aleatorio del oponente
         realizarAtaque(oponente, ataqueSeleccionadoOponente);
+        // Deshabilitar el botón de ataque del oponente después de que ataque
+        btnAtacarOponente.setEnabled(false);
+        actualizarEstado(); // Actualizar el estado después del ataque
     }
 
     private void actualizarBotonesAtaque(Pokemon usuarioPokemon) {
@@ -143,5 +160,14 @@ public class BatallaGUI extends JFrame {
         textArea.append(entrenador.getNombre() + " - Vida: " + entrenador.getVida() + "\n");
         textArea.append(oponente.getNombre() + " - Vida: " + oponente.getVida() + "\n");
         textArea.append("-------------------------\n");
+    }
+
+    private void reiniciarBatalla() {
+        entrenador.setVida(100);
+        oponente.setVida(100);
+        textArea.setText("");
+        actualizarEstado();
+        // Deshabilitar el botón de ataque del oponente
+        btnAtacarOponente.setEnabled(false);
     }
 }
